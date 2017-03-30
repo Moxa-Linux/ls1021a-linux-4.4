@@ -843,6 +843,8 @@ enum ieee80211_vht_opmode_bits {
 };
 
 #define WLAN_SA_QUERY_TR_ID_LEN 2
+#define WLAN_MEMBERSHIP_LEN 8
+#define WLAN_USER_POSITION_LEN 16
 
 /**
  * struct ieee80211_tpc_report_ie
