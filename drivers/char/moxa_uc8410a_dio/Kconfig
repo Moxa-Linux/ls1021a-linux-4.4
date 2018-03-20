@@ -1,0 +1,13 @@
+#
+#  MOXA Digital I/O driver
+#
+
+menu "MOXA UC-8410A DIO driver"
+
+config UC8410A_DIO
+	tristate "UC-8410A DIO"
+        ---help---
+
+	  MOXA UC-8410A Digital I/O driver
+
+endmenu
