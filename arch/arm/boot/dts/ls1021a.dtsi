@@ -499,6 +499,7 @@
 			#gpio-cells = <2>;
 			interrupt-controller;
 			#interrupt-cells = <2>;
+			sleep = <&rcpm 0x00000040 0x0>;
 		};
 
 		gpio2: gpio-controller@2310000 {
