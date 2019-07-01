@@ -81,18 +81,6 @@
 	leds {
 		compatible = "gpio-leds";
 
-		cel_pwr {
-			label = "UC8410A:CEL_PWR";
-			gpios = <&gpio4 27 1>;
-			default-state = "off";
-		};
-
-		cel_reset {
-			label = "UC8410A:CEL_RESET";
-			gpios = <&gpio4 28 1>;
-			default-state = "off";
-		};
-		
 		str_led {
 			label = "UC8410A:RED:PROG";
 			gpios = <&gpio1 16 0>;
@@ -102,12 +90,6 @@
 		sw_ready {
 			label = "UC8410A:GREEN:SWRDY";
 			gpios = <&gpio1 18 0>;
-			default-state = "on";
-		};
-		
-		beeper {
-			label = "UC8410A:BEEP";
-			gpios = <&gpio1 20 0>;
 			default-state = "off";
 		};
 		
@@ -165,6 +147,11 @@
 			default-state = "off";
 		};
 
+	};
+
+	beeper: beeper {
+		compatible = "gpio-beeper";
+		gpios = <&gpio1 20 0>;
 	};
 
 	gpio-keys {
@@ -318,27 +305,31 @@
 };
 
 &qspi {
-	status = "okay";
-	bus-num = <0>;
-	fsl,spi-num-chipselects = <2>;
-	fsl,spi-flash-chipselects = <0>;
-	fsl,qspi-has-second-chip;
-	qflash0: s25fl164k@0 {
-		compatible = "spansion,s25fl164k", "spansion,s25fl064l";
-		#address-cells = <1>;
-		#size-cells = <1>;
-		spi-max-frequency = <20000000>;
-		reg = <0>;
+    status = "okay";
+    bus-num = <0>;
+    fsl,spi-num-chipselects = <2>;
+    fsl,spi-flash-chipselects = <0>;
+    fsl,qspi-has-second-chip;
 
-		partitions@0 {
-			label = "U-Boot";
-			reg = <0x0 0x180000>;
-		};
-		partitions@1 {
-			label = "U-Boot Env";
-			/*reg = <0x180000 0x20000>;*/
-			reg = <0x180000 0x680000>;
-		};
+    qflash0: qspi_flash@0 {
+        compatible = "spansion,s25fl164k", "spansion,s25fl064l", "mx25l6405d","jedec,spi-nor";
+        spi-max-frequency = <20000000>;
+        reg = <0>;
 
-	};	
+        partitions { /*according to kernel Document, must be "partitions", note the 's'*/
+            compatible = "fixed-partitions";
+            #address-cells = <1>;
+            #size-cells = <1>;
+
+            U-Boot@0 {
+                label = "U-Boot";
+                reg = <0x0 0x180000>;
+            };
+            U-Boot_Env@180000 {
+                label = "U-Boot Env";
+                reg = <0x180000 0x40000>;
+            };
+        };
+    };
 };
+
