@@ -68,7 +68,11 @@
 		gpio1 = &gpio2;
 		gpio2 = &gpio3;
 		gpio3 = &gpio4;
+	};
 
+	memory@80000000 {
+		device_type = "memory";
+		reg = <0x0 0x80000000 0x0 0x20000000>;
 	};
 
 	cpus {
@@ -124,6 +128,20 @@
 
 		};
 
+		msi1: msi-controller@1570e00 {
+			compatible = "fsl,1s1021a-msi";
+			reg = <0x0 0x1570e00 0x0 0x8>;
+			msi-controller;
+			interrupts =  <GIC_SPI 179 IRQ_TYPE_LEVEL_HIGH>;
+		};
+
+		msi2: msi-controller@1570e08 {
+			compatible = "fsl,1s1021a-msi";
+			reg = <0x0 0x1570e08 0x0 0x8>;
+			msi-controller;
+			interrupts = <GIC_SPI 180 IRQ_TYPE_LEVEL_HIGH>;
+		};
+
 		ifc: ifc@1530000 {
 			compatible = "fsl,ifc", "simple-bus";
 			reg = <0x0 0x1530000 0x0 0x10000>;
@@ -136,6 +154,21 @@
 			big-endian;
 		};
 
+		qspi: quadspi@1550000 {
+		        //compatible = "fsl,ls1021a-qspi";
+		        compatible = "fsl,ls1-qspi";
+			#address-cells = <1>;
+		        #size-cells = <0>;
+		        reg = <0x0 0x1550000 0x0 0x10000>,
+		                <0x0 0x40000000 0x0 0x4000000>;
+			interrupts = <GIC_SPI 131 IRQ_TYPE_LEVEL_HIGH>;
+			reg-names = "QuadSPI", "QuadSPI-memory";
+		        clock-names = "qspi_en", "qspi";
+		        clocks = <&platform_clk 1>, <&platform_clk 1>;
+		        big-endian;
+		        amba-base = <0x40000000>;
+		};
+
 		esdhc: esdhc@1560000 {
 			compatible = "fsl,ls1021a-esdhc", "fsl,esdhc";
 			reg = <0x0 0x1560000 0x0 0x10000>;
@@ -145,6 +178,16 @@
 			sdhci,auto-cmd12;
 			big-endian;
 			bus-width = <4>;
+			status = "disabled";
+		};
+
+		sata: sata@3200000 {
+			compatible = "fsl,ls1021a-ahci";
+			reg = <0x0 0x3200000 0x0 0x10000>,
+			      <0x0 0x20220520 0x0 0x4>;
+			reg-names = "ahci", "sata-ecc";
+			interrupts = <GIC_SPI 101 IRQ_TYPE_LEVEL_HIGH>;
+			clocks = <&platform_clk 1>;
 			status = "disabled";
 		};
 
@@ -297,7 +340,7 @@
 			clock-frequency = <0>;
 			fifo-size = <15>;
 			status = "disabled";
-		};
+};
 
 		uart1: serial@21c0600 {
 			compatible = "fsl,16550-FIFO64", "ns16550a";
@@ -324,6 +367,70 @@
 			clock-frequency = <0>;
 			fifo-size = <15>;
 			status = "disabled";
+		};
+
+		uqe: uqe@2400000 {
+			#address-cells = <1>;
+			#size-cells = <1>;
+			device_type = "qe";
+			compatible = "fsl,qe", "simple-bus";
+			ranges = <0x0 0x0 0x2400000 0x40000>;
+			reg = <0x0 0x2400000 0x0 0x480>;
+			brg-frequency = <100000000>;
+			bus-frequency = <200000000>;
+
+			fsl,qe-num-riscs = <1>;
+			fsl,qe-num-snums = <28>;
+
+			qeic: qeic@80 {
+				compatible = "fsl,qe-ic";
+				reg = <0x80 0x80>;
+				#address-cells = <0>;
+				interrupt-controller;
+				#interrupt-cells = <1>;
+				interrupts = <0 109 0x04 0 109 0x04>;
+			};
+
+			si1: si@700 {
+				#address-cells = <1>;
+				#size-cells = <0>;
+				compatible = "fsl,qe-si";
+				reg = <0x700 0x80>;
+			};
+
+			siram1: siram@1000 {
+				#address-cells = <1>;
+				#size-cells = <1>;
+				compatible = "fsl,qe-siram";
+				reg = <0x1000 0x800>;
+			};
+
+			ucc@2000 {
+				cell-index = <1>;
+				reg = <0x2000 0x200>;
+				interrupts = <32>;
+				interrupt-parent = <&qeic>;
+			};
+
+			ucc@2200 {
+				cell-index = <3>;
+				reg = <0x2200 0x200>;
+				interrupts = <34>;
+				interrupt-parent = <&qeic>;
+			};
+
+			muram@10000 {
+				#address-cells = <1>;
+				#size-cells = <1>;
+				compatible = "fsl,qe-muram", "fsl,cpm-muram";
+				ranges = <0x0 0x10000 0x6000>;
+
+				data-only@0 {
+					compatible = "fsl,qe-muram-data",
+					"fsl,cpm-muram-data";
+					reg = <0x0 0x6000>;
+				};
+			};
 		};
 
 		lpuart0: serial@2950000 {
@@ -380,8 +487,7 @@
 			status = "disabled";
 		};
 
-
-		gpio1: gpio@2300000 {
+		gpio1: gpio-controller@2300000 {
 			compatible = "fsl,ls1021a-gpio";
 			reg = <0x0 0x2300000 0x0 0x10000>;
 			interrupts = <GIC_SPI 98 IRQ_TYPE_LEVEL_HIGH>;
@@ -391,7 +497,7 @@
 			#interrupt-cells = <2>;
 		};
 
-		gpio2: gpio@2310000 {
+		gpio2: gpio-controller@2310000 {
 			compatible = "fsl,ls1021a-gpio";
 			reg = <0x0 0x2310000 0x0 0x10000>;
 			interrupts = <GIC_SPI 99 IRQ_TYPE_LEVEL_HIGH>;
@@ -401,7 +507,7 @@
 			#interrupt-cells = <2>;
 		};
 
-		gpio3: gpio@2320000 {
+		gpio3: gpio-controller@2320000 {
 			compatible = "fsl,ls1021a-gpio";
 			reg = <0x0 0x2320000 0x0 0x10000>;
 			interrupts = <GIC_SPI 100 IRQ_TYPE_LEVEL_HIGH>;
@@ -411,7 +517,7 @@
 			#interrupt-cells = <2>;
 		};
 
-		gpio4: gpio@2330000 {
+		gpio4: gpio-controller@2330000 {
 			compatible = "fsl,ls1021a-gpio";
 			reg = <0x0 0x2330000 0x0 0x10000>;
 			interrupts = <GIC_SPI 166 IRQ_TYPE_LEVEL_HIGH>;
@@ -421,6 +527,53 @@
 			#interrupt-cells = <2>;
 		};
 
+		ftm0: ftm0@29d0000 {
+			compatible = "fsl,ftm-alarm";
+			reg = <0x0 0x29d0000 0x0 0x10000>;
+			interrupts = <GIC_SPI 118 IRQ_TYPE_LEVEL_HIGH>;
+			big-endian;
+			sleep = <&rcpm 0x0 0x20000000>;
+			status = "disabled";
+		};
+
+		pwm3: ftm@2a00000 {
+			compatible = "fsl,vf610-ftm-pwm";
+			#pwm-cells = <3>;
+			reg = <0x0 0x2a00000 0x0 0x10000>;
+			interrupts = <GIC_SPI 121 IRQ_TYPE_LEVEL_HIGH>;
+			clock-names = "ftm_sys", "ftm_ext",
+				"ftm_fix", "ftm_cnt_clk_en";
+			clocks = <&platform_clk 1>, <&platform_clk 1>,
+				<&platform_clk 1>, <&platform_clk 1>;
+			big-endian;
+			status = "disabled";
+		};
+
+		pwm6: ftm@2a30000 {
+			compatible = "fsl,vf610-ftm-pwm";
+			#pwm-cells = <3>;
+			reg = <0x0 0x2a30000 0x0 0x10000>;
+			interrupts = <GIC_SPI 123 IRQ_TYPE_LEVEL_HIGH>;
+			clock-names = "ftm_sys", "ftm_ext",
+				"ftm_fix", "ftm_cnt_clk_en";
+			clocks = <&platform_clk 1>, <&platform_clk 1>,
+				<&platform_clk 1>, <&platform_clk 1>;
+			big-endian;
+			status = "disabled";
+		};
+
+		pwm7: ftm@2a40000 {
+			compatible = "fsl,vf610-ftm-pwm";
+			#pwm-cells = <3>;
+			reg = <0x0 0x2a40000 0x0 0x10000>;
+			interrupts = <GIC_SPI 124 IRQ_TYPE_LEVEL_HIGH>;
+			clock-names = "ftm_sys", "ftm_ext",
+				"ftm_fix", "ftm_cnt_clk_en";
+			clocks = <&platform_clk 1>, <&platform_clk 1>,
+				<&platform_clk 1>, <&platform_clk 1>;
+			big-endian;
+			status = "disabled";
+		};
 
 		wdog0: watchdog@2ad0000 {
 			compatible = "fsl,imx21-wdt";
@@ -473,6 +626,16 @@
 			clock-names = "dmamux0", "dmamux1";
 			clocks = <&platform_clk 1>,
 				 <&platform_clk 1>;
+		};
+
+		dcu: dcu@2ce0000 {
+			compatible = "fsl,ls1021a-dcu";
+			reg = <0x0 0x2ce0000 0x0 0x10000>;
+			interrupts = <GIC_SPI 172 IRQ_TYPE_LEVEL_HIGH>;
+			clocks = <&platform_clk 0>;
+			clock-names = "dcu";
+			big-endian;
+			status = "disabled";
 		};
 
 		mdio0: mdio@2d24000 {
@@ -585,6 +748,169 @@
 			interrupts = <GIC_SPI 93 IRQ_TYPE_LEVEL_HIGH>;
 			dr_mode = "host";
 			snps,quirk-frame-length-adjustment = <0x20>;
+		};
+
+		pcie@3400000 {
+			compatible = "fsl,ls1021a-pcie", "snps,dw-pcie";
+			reg = <0x00 0x03400000 0x0 0x00010000   /* controller registers */
+			       0x40 0x00000000 0x0 0x00002000>; /* configuration space */
+			reg-names = "regs", "config";
+			interrupts = <GIC_SPI 177 IRQ_TYPE_LEVEL_HIGH>, /* controller interrupt */
+				     <GIC_SPI 181 IRQ_TYPE_LEVEL_HIGH>; /* PME interrupt */
+			interrupt-names = "intr", "pme";
+			fsl,pcie-scfg = <&scfg 0>;
+			#address-cells = <3>;
+			#size-cells = <2>;
+			device_type = "pci";
+			msi-parent = <&msi1>;
+			num-lanes = <4>;
+			bus-range = <0x0 0xff>;
+			ranges = <0x81000000 0x0 0x00000000 0x40 0x00010000 0x0 0x00010000   /* downstream I/O */
+				  0x82000000 0x0 0x40000000 0x40 0x40000000 0x0 0x40000000>; /* non-prefetchable memory */
+			#interrupt-cells = <1>;
+			interrupt-map-mask = <0 0 0 7>;
+			interrupt-map = <0000 0 0 1 &gic GIC_SPI 91  IRQ_TYPE_LEVEL_HIGH>,
+					<0000 0 0 2 &gic GIC_SPI 188 IRQ_TYPE_LEVEL_HIGH>,
+					<0000 0 0 3 &gic GIC_SPI 190 IRQ_TYPE_LEVEL_HIGH>,
+					<0000 0 0 4 &gic GIC_SPI 192 IRQ_TYPE_LEVEL_HIGH>;
+		};
+
+		pcie@3500000 {
+			compatible = "fsl,ls1021a-pcie", "snps,dw-pcie";
+			reg = <0x00 0x03500000 0x0 0x00010000   /* controller registers */
+			       0x48 0x00000000 0x0 0x00002000>; /* configuration space */
+			reg-names = "regs", "config";
+			interrupts = <GIC_SPI 178 IRQ_TYPE_LEVEL_HIGH>,
+				     <GIC_SPI 182 IRQ_TYPE_LEVEL_HIGH>;
+			interrupt-names = "intr", "pme";
+			fsl,pcie-scfg = <&scfg 1>;
+			#address-cells = <3>;
+			#size-cells = <2>;
+			device_type = "pci";
+			msi-parent = <&msi2>;
+			num-lanes = <4>;
+			bus-range = <0x0 0xff>;
+			ranges = <0x81000000 0x0 0x00000000 0x48 0x00010000 0x0 0x00010000   /* downstream I/O */
+				  0x82000000 0x0 0x40000000 0x48 0x40000000 0x0 0x40000000>; /* non-prefetchable memory */
+			#interrupt-cells = <1>;
+			interrupt-map-mask = <0 0 0 7>;
+			interrupt-map = <0000 0 0 1 &gic GIC_SPI 92  IRQ_TYPE_LEVEL_HIGH>,
+					<0000 0 0 2 &gic GIC_SPI 189 IRQ_TYPE_LEVEL_HIGH>,
+					<0000 0 0 3 &gic GIC_SPI 191 IRQ_TYPE_LEVEL_HIGH>,
+					<0000 0 0 4 &gic GIC_SPI 193 IRQ_TYPE_LEVEL_HIGH>;
+		};
+	};
+
+	dcsr {
+		#address-cells = <1>;
+		#size-cells = <1>;
+		compatible = "fsl,dcsr", "simple-bus";
+
+		ranges = <0x0 0x0 0x20000000 0x1000000>;
+
+		dcsr-epu@0 {
+			compatible = "fsl,ls1021a-dcsr-epu";
+			reg = <0x0 0x10000>;
+		};
+
+		dcsr-gdi@100000 {
+			compatible = "fsl,ls1021a-dcsr-gdi";
+			reg = <0x100000 0x10000>;
+		};
+
+		dcsr-dddi@120000 {
+			compatible = "fsl,ls1021a-dcsr-dddi";
+			reg = <0x120000 0x10000>;
+		};
+
+		dcsr-dcfg@220000 {
+			compatible = "fsl,ls1021a-dcsr-dcfg";
+			reg = <0x220000 0x1000>;
+		};
+
+		dcsr-clock@221000 {
+			compatible = "fsl,ls1021a-dcsr-clock";
+			reg = <0x221000 0x1000>;
+		};
+
+		dcsr-rcpm@222000 {
+			compatible = "fsl,ls1021a-dcsr-rcpm";
+			reg = <0x222000 0x1000 0x223000 0x1000>;
+		};
+
+		dcsr-ccp@225000 {
+			compatible = "fsl,ls1021a-dcsr-ccp";
+			reg = <0x225000 0x1000>;
+		};
+
+		dcsr-fusectrl@226000 {
+			compatible = "fsl,ls1021a-dcsr-fusectrl";
+			reg = <0x226000 0x1000>;
+		};
+
+		dcsr-dap@300000 {
+			compatible = "fsl,ls1021a-dcsr-dap";
+			reg = <0x300000 0x10000>;
+		};
+
+		dcsr-cstf@350000 {
+			compatible = "fsl,ls1021a-dcsr-cstf";
+			reg = <0x350000 0x1000 0x3a7000 0x1000>;
+		};
+
+		dcsr-a7rom@360000 {
+			compatible = "fsl,ls1021a-dcsr-a7rom";
+			reg = <0x360000 0x10000>;
+		};
+
+		dcsr-a7cpu@370000 {
+			compatible = "fsl,ls1021a-dcsr-a7cpu";
+			reg = <0x370000 0x8000>;
+		};
+
+		dcsr-a7cti@378000 {
+			compatible = "fsl,ls1021a-dcsr-a7cti";
+			reg = <0x378000 0x4000>;
+		};
+
+		dcsr-etm@37c000 {
+			compatible = "fsl,ls1021a-dcsr-etm";
+			reg = <0x37c000 0x1000 0x37d000 0x3000>;
+		};
+
+		dcsr-hugorom@3a0000 {
+			compatible = "fsl,ls1021a-dcsr-hugorom";
+			reg = <0x3a0000 0x1000>;
+		};
+
+		dcsr-etf@3a1000 {
+			compatible = "fsl,ls1021a-dcsr-etf";
+			reg = <0x3a1000 0x1000 0x3a2000 0x1000>;
+		};
+
+		dcsr-etr@3a3000 {
+			compatible = "fsl,ls1021a-dcsr-etr";
+			reg = <0x3a3000 0x1000>;
+		};
+
+		dcsr-cti@3a4000 {
+			compatible = "fsl,ls1021a-dcsr-cti";
+			reg = <0x3a4000 0x1000 0x3a5000 0x1000 0x3a6000 0x1000>;
+		};
+
+		dcsr-atbrepl@3a8000 {
+			compatible = "fsl,ls1021a-dcsr-atbrepl";
+			reg = <0x3a8000 0x1000>;
+		};
+
+		dcsr-tsgen-ctrl@3a9000 {
+			compatible = "fsl,ls1021a-dcsr-tsgen-ctrl";
+			reg = <0x3a9000 0x1000>;
+		};
+
+		dcsr-tsgen-read@3aa000 {
+			compatible = "fsl,ls1021a-dcsr-tsgen-read";
+			reg = <0x3aa000 0x1000>;
 		};
 	};
 };
