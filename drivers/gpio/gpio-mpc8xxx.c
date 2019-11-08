@@ -340,6 +340,11 @@ static struct irq_chip mpc8xxx_irq_chip = {
 static int mpc8xxx_gpio_irq_map(struct irq_domain *h, unsigned int irq,
 				irq_hw_number_t hwirq)
 {
+	struct mpc8xxx_gpio_chip *mpc8xxx_gc = h->host_data;
+
+	if (mpc8xxx_gc->of_dev_id_data)
+		mpc8xxx_irq_chip.irq_set_type = mpc8xxx_gc->of_dev_id_data;
+
 	irq_set_chip_data(irq, h->host_data);
 	irq_set_chip_and_handler(irq, &mpc8xxx_irq_chip, handle_edge_irq);
 
@@ -414,6 +419,12 @@ static int mpc8xxx_probe(struct platform_device *pdev)
 	mm_gc->save_regs = mpc8xxx_gpio_save_regs;
 	gc->ngpio = MPC8XXX_GPIO_PINS;
 	gc->direction_input = mpc8xxx_gpio_dir_in;
+
+	/*
+	 *  Avoid kernel panic, assign pdev from device tree to gpio_chip
+	 */
+	gc->dev = &pdev->dev;
+
 
 	if (!devtype)
 		devtype = &mpc8xxx_gpio_devtype_default;
