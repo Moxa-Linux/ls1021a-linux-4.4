@@ -1,0 +1,4 @@
+#!/bin/bash
+
+make dtbs
+mkimage -f its/ls102xa-moxa-uc-8420.its its/ls102xa-moxa-uc-8420.itb

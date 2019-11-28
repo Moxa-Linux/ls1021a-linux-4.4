@@ -1,0 +1,53 @@
+/*
+ * U-Boot itb image source file for "uc8420 project"
+ */
+
+/dts-v1/;
+
+/ {
+	description = "U-Boot itb image source file for uc8420 project";
+	#address-cells = <1>;
+	
+	images {
+		kernel@uc8420_zImage {
+			description = "Moxa UC8420 Series Unify Linux Kernel";
+			data = /incbin/("../arch/arm/boot/zImage");
+			type = "kernel";
+			arch = "arm";
+			os = "linux";
+			compression = "none";
+			load = <0x80080000>;
+			entry = <0x80080000>;
+		};
+		fdt@uc8420 {
+			description = "Flattened Device Tree blob for UC8420";
+			data = /incbin/("../arch/arm/boot/dts/ls102xa-moxa-uc-8420.dtb");
+			type = "flat_dt";
+			arch = "arm";
+			compression = "none";
+			load = <0x80000000>;
+		};
+		fdt@uc8422 {
+			description = "Flattened Device Tree blob for UC8422";
+			data = /incbin/("../arch/arm/boot/dts/ls102xa-moxa-uc-8422.dtb");
+			type = "flat_dt";
+			arch = "arm";
+			compression = "none";
+			load = <0x80000000>;
+		};
+	};
+	
+	configurations {
+		default = "uc8422";
+		uc8420 {
+			description = "Boot Linux kernel with uc8420 FDT blob";
+			kernel = "kernel@uc8420_zImage";
+			fdt = "fdt@uc8420";
+		};
+		uc8422 {
+			description = "Boot Linux kernel with uc8422 FDT blob";
+			kernel = "kernel@uc8420_zImage";
+			fdt = "fdt@uc8422";
+		};
+	};
+};
