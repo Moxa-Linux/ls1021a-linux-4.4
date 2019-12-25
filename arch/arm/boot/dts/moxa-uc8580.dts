@@ -49,7 +49,7 @@
 #include "ls1021a.dtsi"
 
 / {
-	model = "MOXA UC8410A";
+	model = "MOXA UC8580";
 
 	aliases {
 		enet0_rgmii_phy = &rgmii_phy0;
@@ -57,10 +57,12 @@
 		enet2_rgmii_phy = &rgmii_phy2;
 	};
 
-	sys_mclk: clock-mclk {
-		compatible = "fixed-clock";
-		#clock-cells = <0>;
-		clock-frequency = <24576000>;
+	clocks {
+		sys_mclk: clock {
+			compatible = "fixed-clock";
+			#clock-cells = <0>;
+			clock-frequency = <24576000>;
+		};
 	};
 
 	regulators {
@@ -81,96 +83,101 @@
 	leds {
 		compatible = "gpio-leds";
 
-		str_led {
-			label = "UC8410A:RED:PROG";
-			gpios = <&gpio1 16 0>;
-			default-state = "off";
-		};
-
 		sw_ready {
-			label = "UC8410A:GREEN:SWRDY";
-			gpios = <&gpio1 18 0>;
-			default-state = "off";
-		};
-		
-		prog_led0 {
-			label = "UC8410A:GREEN:PROG2";
-			gpios = <&gpio4 14 0>;
-			default-state = "off";
-		};
-
-		prog_led1 {
-			label = "UC8410A:GREEN:PROG1";
-			gpios = <&gpio4 15 0>;
-			default-state = "off";
-		};
-
-		prog_led2 {
-			label = "UC8410A:GREEN:PROG0";
+			label = "UC8580:GREEN:SWRDY";
 			gpios = <&gpio4 16 0>;
+			default-state = "on";
+		};
+
+		signal_led_0_0 {
+			label = "UC8580:GREEN:CEL0_0";
+			gpios = <&mled 9 0>;
 			default-state = "off";
 		};
 
-		wifi_signal0 {
-			label = "UC8410A:GREEN:CEL2";
-			gpios = <&gpio4 17 0>;
+		signal_led_0_1 {
+			label = "UC8580:GREEN:CEL0_1";
+			gpios = <&mled 10 0>;
 			default-state = "off";
 		};
 
-		wifi_signal1 {
-			label = "UC8410A:GREEN:CEL1";
-			gpios = <&gpio4 18 0>;
+		signal_led_0_2 {
+			label = "UC8580:GREEN:CEL0_2";
+			gpios = <&mled 11 0>;
 			default-state = "off";
 		};
 
-		wifi_signal2 {
-			label = "UC8410A:GREEN:CEL0";
-			gpios = <&gpio4 19 0>;
+		signal_led_1_0 {
+			label = "UC8580:GREEN:CEL1_0";
+			gpios = <&mled 6 0>;
 			default-state = "off";
 		};
 
-		cpu_diag_red {
-			label = "UC8410A:RED:DIA";
-			gpios = <&gpio4 20 0>;
+		signal_led_1_1 {
+			label = "UC8580:GREEN:CEL1_1";
+			gpios = <&mled 7 0>;
 			default-state = "off";
 		};
 
-		cpu_diag_green {
-			label = "UC8410A:GREEN:DIA";
-			gpios = <&gpio4 21 0>;
+		signal_led_1_2 {
+			label = "UC8580:GREEN:CEL1_2";
+			gpios = <&mled 8 0>;
 			default-state = "off";
 		};
 
-		cpu_diag_yellow {
-			label = "UC8410A:YELLOW:DIA";
-			gpios = <&gpio4 22 0>;
+		signal_led_2_0 {
+			label = "UC8580:GREEN:CEL2_0";
+			gpios = <&mled 3 0>;
 			default-state = "off";
 		};
 
-	};
+		signal_led_2_1 {
+			label = "UC8580:GREEN:CEL2_1";
+			gpios = <&mled 4 0>;
+			default-state = "off";
+		};
 
-	beeper: beeper {
-		compatible = "gpio-beeper";
-		gpios = <&gpio1 20 0>;
+		signal_led_2_2 {
+			label = "UC8580:GREEN:CEL2_2";
+			gpios = <&mled 5 0>;
+			default-state = "off";
+		};
+
+		signal_led_3_0 {
+			label = "UC8580:GREEN:CEL3_0";
+			gpios = <&mled 0 0>;
+			default-state = "off";
+		};
+
+		signal_led_3_1 {
+			label = "UC8580:GREEN:CEL3_1";
+			gpios = <&mled 1 0>;
+			default-state = "off";
+		};
+
+		signal_led_3_2 {
+			label = "UC8580:GREEN:CEL3_2";
+			gpios = <&mled 2 0>;
+			default-state = "off";
+		};
+
+		prog_led0 {
+			label = "UC8580:RED:PROG0";
+			gpios = <&mled 15 0>;
+			default-state = "off";
+		};
+
 	};
 
 	gpio-keys {
 		compatible = "gpio-keys";
 		reset-key {
 			label = "Reset key";
-			gpios = <&gpio1 21 1>;
+			gpios = <&gpio4 20 1>;
 			linux,code = <69>;
 			default-state = "on";
 		};
 	};
-	
-
-};
-
-
-&dspi1 {
-	bus-num = <0>;
-	status = "disabled";
 
 };
 
@@ -189,7 +196,7 @@
 &enet2 {
 	phy-handle = <&rgmii_phy2>;
 	phy-mode = "rgmii-id";
-	status = "okay";
+	status = "disabled";
 };
 
 &i2c0 {
@@ -197,26 +204,48 @@
 	/* clock-frequency = <400000>; */
 	clock-frequency = <100000>;
 
-   rtc@68 {
-	compatible = "dallas,ds1374";
-	reg = <0x68>;
-    };
+	/* MLED	*/
+	mled: gpio@26 {
+		compatible = "nxp,pca9535";
+		reg = <0x26>;
+		gpio-controller;
+		#gpio-cells = <2>;
+		interrupts = <23 IRQ_TYPE_LEVEL_HIGH>;
+	};
 
-    tpm {
-      compatible = "infineon,slb9635tt";
-      reg = <0x20>;
-    };
+	/* DIO */
+	gpio@27 {
+		compatible = "nxp,pca9535";
+		reg = <0x27>;
+		gpio-controller;
+		interrupts = <23 IRQ_TYPE_LEVEL_LOW>;
+	};
 };
 
 &i2c1 {
 	status = "okay";
-	codec: sgtl5000@a {
-		compatible = "fsl,sgtl5000";
-		reg = <0x0a>;
-		VDDA-supply = <&reg_3p3v>;
-		VDDIO-supply = <&reg_3p3v>;
-		clocks = <&sys_mclk 1>;
+	/* clock-frequency = <400000>; */
+	clock-frequency = <100000>;
+
+	tpm@20 {
+		compatible = "infineon,slb9635tt";
+		reg = <0x20>;
 	};
+
+	/* module power
+	   sim card slot */
+	gpio@27 {
+		compatible = "nxp,pca9535";
+		reg = <0x27>;
+		gpio-controller;
+		interrupts = <23 IRQ_TYPE_LEVEL_LOW>;
+	};
+
+	rtc@6f {
+		compatible = "isil,isl1208";
+		reg = <0x6f>;
+	};
+
 };
 
 &i2c2 {
@@ -247,27 +276,30 @@
 	status = "okay";
 };
 
+&lpuart1 {
+	status = "okay";
+};
+
 &mdio0 {
 	rgmii_phy0: ethernet-phy@0 {
-		compatible = "marvell,88e1118";
+		compatible = "marvell,88e1510";
 		reg = <0x0>;
 		marvell,reg-init =
 			/* marvell,reg-init = <reg-page reg mask value> */
-			<3 0x11 0 0x4415>, /* Reg 3,17 */
-			<3 0x10 0 0x77>; /* Reg 3,16 */
+			<3 0x11 0 0x15>, /* Reg 3,17 */
+			<3 0x10 0 0x177>; /* Reg 3,16 */
 	};
-
 	rgmii_phy1: ethernet-phy@1 {
-		compatible = "marvell,88e1118";
+		compatible = "marvell,88e1510";
 		reg = <0x1>;
 		marvell,reg-init =
 			/* marvell,reg-init = <reg-page reg mask value> */
-			<3 0x11 0 0x4415>, /* Reg 3,17 */
-			<3 0x10 0 0x77>; /* Reg 3,16 */
+			<3 0x11 0 0x15>, /* Reg 3,17 */
+			<3 0x10 0 0x177>; /* Reg 3,16 */
+			/* <6 0x12 0 0x8>; /* Reg 6,18 For DVT Gigabit LAN loopback test */
 	};
-
 	rgmii_phy2: ethernet-phy@2 {
-		compatible = "marvell,88e1118";
+		compatible = "marvell,88e1510";
 		reg = <0x2>;
 		marvell,reg-init =
 			/* marvell,reg-init = <reg-page reg mask value> */
@@ -280,8 +312,78 @@
 	};
 };
 
+&uqe {
+	//status = "disabled";
+	tdma: ucc@2000 {
+		compatible = "fsl,ucc-tdm";
+		rx-clock-name = "clk8";
+		tx-clock-name = "clk9";
+		fsl,rx-sync-clock = "rsync_pin";
+		fsl,tx-sync-clock = "tsync_pin";
+		fsl,tx-timeslot = <0xfffffffe>;
+		fsl,rx-timeslot = <0xfffffffe>;
+		fsl,tdm-framer-type = "e1";
+		fsl,tdm-mode = "normal";
+		fsl,tdm-id = <0>;
+		fsl,siram-entry-id = <0>;
+	};
+
+	serial: ucc@2200 {
+		device_type = "serial";
+		compatible = "ucc_uart";
+		port-number = <1>;
+		rx-clock-name = "brg2";
+		tx-clock-name = "brg2";
+	};
+};
+
 &uart0 {
 	status = "okay";
+};
+
+&uart1 {
+	status = "okay";
+};
+
+&uart2 {
+	status = "okay";
+};
+
+&pwm6 {
+	status = "okay";
+};
+
+&pwm7 {
+	status = "okay";
+};
+
+&dcfg {
+	status = "okay";
+};
+
+&qspi {
+	status = "okay";
+	bus-num = <0>;
+	fsl,spi-num-chipselects = <2>;
+	fsl,spi-flash-chipselects = <0>;
+	fsl,qspi-has-second-chip;
+	qflash0: s25fl164k@0 {
+		compatible = "spansion,s25fl164k", "spansion,s25fl064l";
+		#address-cells = <1>;
+		#size-cells = <1>;
+		spi-max-frequency = <20000000>;
+		reg = <0>;
+
+		partitions@0 {
+			label = "U-Boot";
+			reg = <0x0 0x180000>;
+		};
+		partitions@1 {
+			label = "U-Boot Env";
+			reg = <0x180000 0x680000>;
+		};
+
+	};
 };
 
 &uart1 {
@@ -295,41 +397,3 @@
 &sata {
         status = "okay";
 };
-
-&pwm6 {
-	status = "okay";
-};
-
-&pwm7 {
-	status = "okay";
-};
-
-&qspi {
-    status = "okay";
-    bus-num = <0>;
-    fsl,spi-num-chipselects = <2>;
-    fsl,spi-flash-chipselects = <0>;
-    fsl,qspi-has-second-chip;
-
-    qflash0: qspi_flash@0 {
-        compatible = "spansion,s25fl164k", "spansion,s25fl064l", "mx25l6405d","jedec,spi-nor";
-        spi-max-frequency = <20000000>;
-        reg = <0>;
-
-        partitions { /*according to kernel Document, must be "partitions", note the 's'*/
-            compatible = "fixed-partitions";
-            #address-cells = <1>;
-            #size-cells = <1>;
-
-            U-Boot@0 {
-                label = "U-Boot";
-                reg = <0x0 0x180000>;
-            };
-            U-Boot_Env@180000 {
-                label = "U-Boot Env";
-                reg = <0x180000 0x40000>;
-            };
-        };
-    };
-};
-

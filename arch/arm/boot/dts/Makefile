@@ -355,6 +355,8 @@ dtb-$(CONFIG_SOC_LS1021A) += \
 	ls1021a-qds.dtb \
 	ls1021a-twr.dtb \
 	ls1021a-moxa-uc-8410a.dtb \
+	ls1021a-moxa-uc-8540.dtb \
+	moxa-uc8580.dtb \
 	ls102xa-moxa-uc-8420.dtb \
 	ls102xa-moxa-uc-8422.dtb
 dtb-$(CONFIG_SOC_VF610) += \
