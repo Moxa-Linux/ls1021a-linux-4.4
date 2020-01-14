@@ -605,5 +605,7 @@ config TILE_SROM
 
 source "drivers/char/xillybus/Kconfig"
 
+source "drivers/char/moxa_uc8410a_dio/Kconfig"
+
 endmenu
 

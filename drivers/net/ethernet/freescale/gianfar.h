@@ -235,9 +235,14 @@ extern const char gfar_driver_version[];
 #define RQUEUE_EN_ALL		0x000000FF
 
 /* Init to do tx snooping for buffers and descriptors */
+#ifdef CONFIG_SOC_LS1021A
+#define DMACTRL_INIT_SETTINGS   0x00000003
+#else
 #define DMACTRL_INIT_SETTINGS   0x000000c3
+#endif
 #define DMACTRL_GRS             0x00000010
 #define DMACTRL_GTS             0x00000008
+#define DMACTRL_LE              0x00008000
 
 #define TSTAT_CLEAR_THALT_ALL	0xFF000000
 #define TSTAT_CLEAR_THALT	0x80000000
@@ -401,7 +406,11 @@ extern const char gfar_driver_version[];
 #define ATTR_BUFSTASH		0x00004000
 
 #define ATTR_SNOOPING		0x000000c0
+#ifdef CONFIG_SOC_LS1021A
+#define ATTR_INIT_SETTINGS      0
+#else
 #define ATTR_INIT_SETTINGS      ATTR_SNOOPING
+#endif
 
 #define ATTRELI_INIT_SETTINGS   0x0
 #define ATTRELI_EL_MASK		0x3fff0000
@@ -1174,6 +1183,10 @@ struct gfar_private {
 		pause_aneg_en:1,
 		tx_pause_en:1,
 		rx_pause_en:1;
+	/* little endian dma buffer and descriptor host interface */
+#ifdef CONFIG_SOC_LS1021A
+	    unsigned int dma_endian_le;
+#endif
 
 	/* The total tx and rx ring size for the enabled queues */
 	unsigned int total_tx_ring_size;
@@ -1376,3 +1389,4 @@ struct filer_table {
 extern int gfar_phc_index;
 
 #endif /* __GIANFAR_H */
+

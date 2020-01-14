@@ -29,13 +29,6 @@
 #include <linux/workqueue.h>
 #include <linux/slab.h>
 #include <linux/pm.h>
-#ifdef CONFIG_RTC_DRV_DS1374_WDT
-#include <linux/fs.h>
-#include <linux/ioctl.h>
-#include <linux/miscdevice.h>
-#include <linux/reboot.h>
-#include <linux/watchdog.h>
-#endif
 
 #define DS1374_REG_TOD0		0x00 /* Time of Day */
 #define DS1374_REG_TOD1		0x01
@@ -52,6 +45,9 @@
 #define DS1374_REG_SR_OSF	0x80 /* Oscillator Stop Flag */
 #define DS1374_REG_SR_AF	0x01 /* Alarm Flag */
 #define DS1374_REG_TCR		0x09 /* Trickle Charge */
+
+static struct i2c_client *save_client;
+EXPORT_SYMBOL(save_client);
 
 static const struct i2c_device_id ds1374_id[] = {
 	{ "ds1374", 0 },
@@ -107,6 +103,8 @@ static int ds1374_read_rtc(struct i2c_client *client, u32 *time,
 	return 0;
 }
 
+EXPORT_SYMBOL(ds1374_read_rtc);
+
 static int ds1374_write_rtc(struct i2c_client *client, u32 time,
 			    int reg, int nbytes)
 {
@@ -125,6 +123,8 @@ static int ds1374_write_rtc(struct i2c_client *client, u32 time,
 
 	return i2c_smbus_write_i2c_block_data(client, reg, nbytes, buf);
 }
+
+EXPORT_SYMBOL(ds1374_write_rtc);
 
 static int ds1374_check_rtc_status(struct i2c_client *client)
 {
@@ -650,31 +650,13 @@ static int ds1374_probe(struct i2c_client *client,
 		return PTR_ERR(ds1374->rtc);
 	}
 
-#ifdef CONFIG_RTC_DRV_DS1374_WDT
 	save_client = client;
-	ret = misc_register(&ds1374_miscdev);
-	if (ret)
-		return ret;
-	ret = register_reboot_notifier(&ds1374_wdt_notifier);
-	if (ret) {
-		misc_deregister(&ds1374_miscdev);
-		return ret;
-	}
-	ds1374_wdt_settimeout(131072);
-#endif
-
 	return 0;
 }
 
 static int ds1374_remove(struct i2c_client *client)
 {
 	struct ds1374 *ds1374 = i2c_get_clientdata(client);
-#ifdef CONFIG_RTC_DRV_DS1374_WDT
-	misc_deregister(&ds1374_miscdev);
-	ds1374_miscdev.parent = NULL;
-	unregister_reboot_notifier(&ds1374_wdt_notifier);
-#endif
-
 	if (client->irq > 0) {
 		mutex_lock(&ds1374->mutex);
 		ds1374->exiting = 1;
@@ -692,7 +674,7 @@ static int ds1374_suspend(struct device *dev)
 {
 	struct i2c_client *client = to_i2c_client(dev);
 
-	if (client->irq > 0 && device_may_wakeup(&client->dev))
+	if (client->irq >= 0 && device_may_wakeup(&client->dev))
 		enable_irq_wake(client->irq);
 	return 0;
 }
@@ -701,7 +683,7 @@ static int ds1374_resume(struct device *dev)
 {
 	struct i2c_client *client = to_i2c_client(dev);
 
-	if (client->irq > 0 && device_may_wakeup(&client->dev))
+	if (client->irq >= 0 && device_may_wakeup(&client->dev))
 		disable_irq_wake(client->irq);
 	return 0;
 }

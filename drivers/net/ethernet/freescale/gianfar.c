@@ -147,6 +147,7 @@ static void gfar_clear_exact_match(struct net_device *dev);
 static void gfar_set_mac_for_addr(struct net_device *dev, int num,
 				  const u8 *addr);
 static int gfar_ioctl(struct net_device *dev, struct ifreq *rq, int cmd);
+static phy_interface_t gfar_get_interface(struct net_device *dev);
 
 MODULE_AUTHOR("Freescale Semiconductor, Inc");
 MODULE_DESCRIPTION("Gianfar Ethernet Driver");
@@ -731,7 +732,6 @@ static int gfar_of_group_count(struct device_node *np)
 static int gfar_of_init(struct platform_device *ofdev, struct net_device **pdev)
 {
 	const char *model;
-	const char *ctype;
 	const void *mac_addr;
 	int err = 0, i;
 	struct net_device *dev = NULL;
@@ -897,13 +897,15 @@ static int gfar_of_init(struct platform_device *ofdev, struct net_device **pdev)
 				     FSL_GIANFAR_DEV_HAS_TIMER |
 				     FSL_GIANFAR_DEV_HAS_RX_FILER;
 
-	err = of_property_read_string(np, "phy-connection-type", &ctype);
-
-	/* We only care about rgmii-id.  The rest are autodetected */
-	if (err == 0 && !strcmp(ctype, "rgmii-id"))
-		priv->interface = PHY_INTERFACE_MODE_RGMII_ID;
+	/* Use PHY connection type from the DT node if one is specified there.
+	 * rgmii-id really needs to be specified. Other types can be
+	 * detected by hardware
+	 */
+	err = of_get_phy_mode(np);
+	if (err >= 0)
+		priv->interface = err;
 	else
-		priv->interface = PHY_INTERFACE_MODE_MII;
+		priv->interface = gfar_get_interface(dev);
 
 	if (of_find_property(np, "fsl,magic-packet", NULL))
 		priv->device_flags |= FSL_GIANFAR_DEV_HAS_MAGIC_PACKET;
@@ -926,6 +928,9 @@ static int gfar_of_init(struct platform_device *ofdev, struct net_device **pdev)
 
 	/* Find the TBI PHY.  If it's not there, we don't support SGMII */
 	priv->tbi_node = of_parse_phandle(np, "tbi-handle", 0);
+#ifdef CONFIG_SOC_LS1021A
+    priv->dma_endian_le = of_property_read_bool(np, "fsl,dma-endian-le");
+#endif
 
 	return 0;
 
@@ -1780,13 +1785,11 @@ static int init_phy(struct net_device *dev)
 	uint gigabit_support =
 		priv->device_flags & FSL_GIANFAR_DEV_HAS_GIGABIT ?
 		GFAR_SUPPORTED_GBIT : 0;
-	phy_interface_t interface;
+	phy_interface_t interface = priv->interface;
 
 	priv->oldlink = 0;
 	priv->oldspeed = 0;
 	priv->oldduplex = -1;
-
-	interface = gfar_get_interface(dev);
 
 	priv->phydev = of_phy_connect(dev, priv->phy_node, &adjust_link, 0,
 				      interface);
@@ -2058,6 +2061,10 @@ void gfar_start(struct gfar_private *priv)
 	/* Initialize DMACTRL to have WWR and WOP */
 	tempval = gfar_read(&regs->dmactrl);
 	tempval |= DMACTRL_INIT_SETTINGS;
+#ifdef CONFIG_SOC_LS1021A
+	if (priv->dma_endian_le)
+		tempval |= DMACTRL_LE;
+#endif
 	gfar_write(&regs->dmactrl, tempval);
 
 	/* Make sure we aren't stopped */

@@ -38,6 +38,7 @@ modules.builtin
 Module.symvers
 *.dwo
 *.su
+*.itb
 
 #
 # Top-level generic files
@@ -67,6 +68,7 @@ Module.symvers
 #
 !.gitignore
 !.mailmap
+!.scmversion
 
 #
 # Generated include files

@@ -565,12 +565,22 @@ config SOC_IMX7D
 	help
 		This enables support for Freescale i.MX7 Dual processor.
 
+config FSL_SOC
+   bool
+
 config SOC_LS1021A
 	bool "Freescale LS1021A support"
+	select CPU_V7
 	select ARM_GIC
+	select CLKSRC_OF
 	select HAVE_ARM_ARCH_TIMER
+	select HAVE_SMP
+	select FSL_SOC
+	select MIGHT_HAVE_PCI
 	select PCI_DOMAINS if PCI
 	select ZONE_DMA if ARM_LPAE
+	select FSL_SLEEP_FSM if PM
+	select ARCH_HAS_CPUFREQ
 	help
 	  This enables support for Freescale LS1021A processor.
 
