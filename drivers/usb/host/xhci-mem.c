@@ -1460,7 +1460,6 @@ int xhci_endpoint_init(struct xhci_hcd *xhci,
 	struct xhci_ring *ep_ring;
 	unsigned int max_packet;
 	unsigned int max_burst;
-	unsigned int interval;
 	enum xhci_ring_type type;
 	u32 max_esit_payload;
 	u32 endpoint_type;
@@ -1492,18 +1491,7 @@ int xhci_endpoint_init(struct xhci_hcd *xhci,
 	ep_ring = virt_dev->eps[ep_index].new_ring;
 	ep_ctx->deq = cpu_to_le64(ep_ring->first_seg->dma | ep_ring->cycle_state);
 
-	/* Periodic endpoint bInterval limit quirk */
-	if (usb_endpoint_xfer_int(&ep->desc) ||
-	    usb_endpoint_xfer_isoc(&ep->desc)) {
-		if ((xhci->quirks & XHCI_LIMIT_ENDPOINT_INTERVAL_7) &&
-		    udev->speed >= USB_SPEED_HIGH &&
-		    interval >= 7) {
-			interval = 6;
-		}
-	}
-
 	ep_ctx->ep_info = cpu_to_le32(xhci_get_endpoint_interval(udev, ep)
-				      | EP_INTERVAL(interval)
 				      | EP_MULT(xhci_get_endpoint_mult(udev, ep)));
 
 	/* FIXME dig Mult and streams info out of ep companion desc */
