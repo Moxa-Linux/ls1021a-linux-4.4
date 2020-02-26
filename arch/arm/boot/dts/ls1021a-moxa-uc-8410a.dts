@@ -49,7 +49,7 @@
 #include "ls1021a.dtsi"
 
 / {
-	model = "MOXA UC8410A";
+	model = "MOXA UC8410A HW-2.0";
 
 	aliases {
 		enet0_rgmii_phy = &rgmii_phy0;
@@ -197,15 +197,15 @@
 	/* clock-frequency = <400000>; */
 	clock-frequency = <100000>;
 
-   rtc@68 {
-	compatible = "dallas,ds1374";
-	reg = <0x68>;
-    };
+	rtc@68 {
+		compatible = "dallas,ds1374";
+		reg = <0x68>;
+	};
 
-    tpm {
-      compatible = "infineon,slb9635tt";
-      reg = <0x20>;
-    };
+	tpm {
+		compatible = "infineon,slb9635tt";
+		reg = <0x20>;
+	};
 };
 
 &i2c1 {
@@ -293,7 +293,7 @@
 };
 
 &sata {
-        status = "okay";
+	status = "okay";
 };
 
 &pwm6 {
@@ -305,31 +305,31 @@
 };
 
 &qspi {
-    status = "okay";
-    bus-num = <0>;
-    fsl,spi-num-chipselects = <2>;
-    fsl,spi-flash-chipselects = <0>;
-    fsl,qspi-has-second-chip;
+	status = "okay";
+	bus-num = <0>;
+	fsl,spi-num-chipselects = <2>;
+	fsl,spi-flash-chipselects = <0>;
+	fsl,qspi-has-second-chip;
 
-    qflash0: qspi_flash@0 {
-        compatible = "spansion,s25fl164k", "spansion,s25fl064l", "mx25l6405d","jedec,spi-nor";
-        spi-max-frequency = <20000000>;
-        reg = <0>;
+	qflash0: qspi_flash@0 {
+		compatible = "spansion,s25fl164k", "spansion,s25fl064l", "mx25l6405d","jedec,spi-nor";
+		spi-max-frequency = <20000000>;
+		reg = <0>;
 
-        partitions { /*according to kernel Document, must be "partitions", note the 's'*/
-            compatible = "fixed-partitions";
-            #address-cells = <1>;
-            #size-cells = <1>;
+		partitions { /*according to kernel Document, must be "partitions", note the 's'*/
+			compatible = "fixed-partitions";
+			#address-cells = <1>;
+			#size-cells = <1>;
 
-            U-Boot@0 {
-                label = "U-Boot";
-                reg = <0x0 0x180000>;
-            };
-            U-Boot_Env@180000 {
-                label = "U-Boot Env";
-                reg = <0x180000 0x40000>;
-            };
-        };
-    };
+			U-Boot@0 {
+				label = "U-Boot";
+				reg = <0x0 0x180000>;
+			};
+			U-Boot_Env@180000 {
+				label = "U-Boot Env";
+				reg = <0x180000 0x40000>;
+			};
+		};
+	};
 };
 
