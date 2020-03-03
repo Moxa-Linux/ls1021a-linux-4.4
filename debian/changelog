@@ -1,0 +1,5 @@
+ls102xa-linux-4.4 (4.4.201+3.1.0) jessie; urgency=medium
+
+  * Initial release from UC-8410A V3.0
+
+ -- Alif Chen <alif.chen@moxa.com>  Thu, 20 Feb 2020 18:00:40 +0800
