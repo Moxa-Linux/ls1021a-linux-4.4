@@ -1,0 +1,3 @@
+output/uImage_dtbs/uImage /var/tmp/p1/
+output/uImage_dtbs/ls1021a-moxa-uc-8410a.dtb /var/tmp/p1/
+output/uImage_dtbs/moxa-uc8410a.dtb /var/tmp/p1/
