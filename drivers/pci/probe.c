@@ -841,6 +841,13 @@ int pci_scan_bridge(struct pci_bus *bus, struct pci_dev *dev, int max, int pass)
 
 	pci_enable_crs(dev);
 
+	/*
+	* Bootloader passes non-sense register state to kernel on pcie 1.
+	* To detect InnoDisk EMPL-G201 Dual isolated GbE LAN ports, I
+	* force all pcie bridge to reconfigure such shit.
+	*/
+	pci_set_flags(PCI_REASSIGN_ALL_RSRC);
+
 	if ((secondary || subordinate) && !pcibios_assign_all_busses() &&
 	    !is_cardbus && !broken) {
 		unsigned int cmax;
@@ -1580,6 +1587,7 @@ struct pci_dev *pci_alloc_dev(struct pci_bus *bus)
 	INIT_LIST_HEAD(&dev->bus_list);
 	dev->dev.type = &pci_dev_type;
 	dev->bus = pci_bus_get(bus);
+	mutex_init(&dev->enable_mutex);
 
 	return dev;
 }
