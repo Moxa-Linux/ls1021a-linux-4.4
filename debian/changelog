@@ -1,3 +1,12 @@
+ls102xa-linux-4.4 (4.4.201+3.1.1) jessie; urgency=medium
+
+  * PCI: Fix race condition in pci_enable/disable_device()
+  * pci: probe: force to reconfigure pcie bridge
+  * arm: config: add realtek for HW testing card
+  * gpio: mpc8xxx: Don't overwrite default irq_set_type callback
+
+ -- Alif Chen <alif.chen@moxa.com>  Fri, 13 Mar 2020 16:03:24 +0800
+
 ls102xa-linux-4.4 (4.4.201+3.1.0) jessie; urgency=medium
 
   * Initial release from UC-8410A V3.0
