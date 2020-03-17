@@ -1,4 +1,4 @@
-ls102xa-linux-4.4 (4.4.201+3.1.1) jessie; urgency=medium
+ls102xa-linux-4.4 (4.4.201+1.1.1+deb8) jessie; urgency=medium
 
   * PCI: Fix race condition in pci_enable/disable_device()
   * pci: probe: force to reconfigure pcie bridge
