@@ -312,7 +312,7 @@
 	fsl,qspi-has-second-chip;
 
 	qflash0: qspi_flash@0 {
-		compatible = "spansion,s25fl164k", "spansion,s25fl064l", "mx25l6405d","jedec,spi-nor";
+		compatible = "spansion,s25fl164k", "spansion,s25fl064l", "macronix,mx25l6405d","jedec,spi-nor";
 		spi-max-frequency = <20000000>;
 		reg = <0>;
 
