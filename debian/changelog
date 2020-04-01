@@ -1,3 +1,10 @@
+ls102xa-linux-4.4 (4.4.201+1.1.2+deb8) jessie; urgency=medium
+
+  * dts: uc8410a/uc8540/uc8580: support QSPI macronix,mx25l6433f
+  * spi-nor: add QUAD read flag for MX25L6433FM2I-08G
+
+ -- Alif Chen <alif.chen@moxa.com>  Wed, 01 Apr 2020 10:35:21 +0800
+
 ls102xa-linux-4.4 (4.4.201+1.1.1+deb8) jessie; urgency=medium
 
   * PCI: Fix race condition in pci_enable/disable_device()
