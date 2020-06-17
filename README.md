@@ -37,7 +37,7 @@ git clone git@gitlab.syssw.moxa.com:MXcore-Kernel/ls102xa-linux-4.4.git
 
 ### 2. Check out the kernel source
 
-Go to `/your/path/to/ls102xa-linux-4.4` and check the branch. If you want to build the latest ls102xa-linux-4.1 kernel, please make sure you are in the develop branch.
+Go to `/your/path/to/ls102xa-linux-4.4` and check the branch. If you want to build the latest ls102xa-linux-4.4 kernel, please make sure you are in the develop branch.
 
 ```bash
 # check branch
