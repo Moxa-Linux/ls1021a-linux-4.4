@@ -22,8 +22,7 @@ Follow the instructions below to build the *ls102xa-linux-4.4* kernel and update
 
 | Branch / Tags | Build Instructions |
 | ------------- | ------------------ |
-| UC-8410A <br> UC-8540 <br> UC-8580 | [Past Instructions](OLD_GUIDELINE.md) |
-| UC-8410A <br> UC-8540 <br> UC-8580 <br> 4.4.201-cip39-rt26/jessie/master | Below Instructions (`Latest`) |
+| UC-8410A_V3.1 <br> 4.4.201-cip39-rt26/jessie/master | Below Instructions (`Latest`) |
 
 ## Build Kernel Packages
 
