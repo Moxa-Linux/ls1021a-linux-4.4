@@ -1,3 +1,9 @@
+ls102xa-linux-4.4 (4.4.201+1.1.4+deb8) stretch; urgency=medium
+
+  * Revert "fix: ls102xa_defconfig: adjust kernel/user memory to 1G/3G"
+
+ -- Alif Chen <alif.chen@moxa.com>  Fri, 24 Jul 2020 14:12:46 +0800
+
 ls102xa-linux-4.4 (4.4.201+1.1.3+deb8) jessie; urgency=medium
 
   * fix: ls102xa_defconfig: adjust kernel/user memory to 1G/3G
