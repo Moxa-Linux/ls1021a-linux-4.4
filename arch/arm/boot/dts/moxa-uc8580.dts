@@ -86,7 +86,7 @@
 		sw_ready {
 			label = "UC8580:GREEN:SWRDY";
 			gpios = <&gpio4 16 0>;
-			default-state = "on";
+			default-state = "off";
 		};
 
 		signal_led_0_0 {
