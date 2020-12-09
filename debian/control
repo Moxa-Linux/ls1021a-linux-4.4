@@ -56,8 +56,6 @@ Architecture: armhf
 Depends: ${misc:Depends},
          cryptodev-linux-4.4.0-cip-rt-moxa-ls102xa (>= 1.10+1.0.0),
          uc8540-modules (= ${binary:Version})
-Replaces: uc8540-system (<= 1.2.7+deb8), uc8540-syskernel (<= 1.2.7+deb8)
-Breaks: uc8540-system (<= 1.2.7+deb8), uc8540-syskernel (<= 1.2.7+deb8)
 Description: ls102xa Flattened Image
  Flattened image includes Linux kernel image and device trees.
  Device tree describesthe hardware components on the device including
@@ -68,8 +66,6 @@ Package: uc8540-modules
 Architecture: armhf
 Depends: ${misc:Depends},
          kmod
-Replaces: uc8540-system (<= 1.2.7+deb8), uc8540-syskernel (<= 1.2.7+deb8)
-Breaks: uc8540-system (<= 1.2.7+deb8), uc8540-syskernel (<= 1.2.7+deb8)
 Description: ls102xa standard kernel modules
  The Linux standard kernel modules for UC-8540 Linux kernel image.
  This package contains all kernel modules for ls102xa CIP Linux 4.4.
@@ -79,8 +75,6 @@ Architecture: armhf
 Depends: ${misc:Depends},
          cryptodev-linux-4.4.0-cip-rt-moxa-ls102xa (>= 1.10+1.0.0),
          uc8580-modules (= ${binary:Version})
-Replaces: uc8580-system (<= 1.1.0+deb8), uc8580-syskernel (<= 1.1.0+deb8)
-Breaks: uc8580-system (<= 1.1.0+deb8), uc8580-syskernel (<= 1.1.0+deb8)
 Description: ls102xa Flattened Image
  Flattened image includes Linux kernel image and device trees.
  Device tree describesthe hardware components on the device including
@@ -91,8 +85,6 @@ Package: uc8580-modules
 Architecture: armhf
 Depends: ${misc:Depends},
          kmod
-Replaces: uc8580-system (<= 1.1.0+deb8), uc8580-syskernel (<= 1.1.0+deb8)
-Breaks: uc8580-system (<= 1.1.0+deb8), uc8580-syskernel (<= 1.1.0+deb8)
 Description: ls102xa standard kernel modules
  The Linux standard kernel modules for UC-8580 Linux kernel image.
  This package contains all kernel modules for ls102xa CIP Linux 4.4.
