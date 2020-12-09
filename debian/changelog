@@ -1,3 +1,11 @@
+ls102xa-linux-4.4 (4.4.201+1.1.5+deb8) jessie; urgency=medium
+
+  [Changed]
+    * Removed Replaces uc8540-system and uc8540-syskernel package settings.
+    * Removed Breaks uc8540-system and uc8540-syskernel package settings.
+
+ -- Alif Chen <alif.chen@moxa.com>  Wed, 09 Dec 2020 10:16:08 +0800
+
 ls102xa-linux-4.4 (4.4.201+1.1.4+deb8) stretch; urgency=medium
 
   * Revert "fix: ls102xa_defconfig: adjust kernel/user memory to 1G/3G"
