@@ -4,7 +4,7 @@ Priority: optional
 Maintainer: Alif Chen <Alif.Chen@moxa.com>
 Standards-Version: 4.1.2
 Build-Depends: debhelper (>= 9),
-               libc6-dev,
+               libc6-dev:armhf,
                cpio,
                liblz4-tool,
                u-boot-tools,
