@@ -179,6 +179,24 @@
 		};
 	};
 
+	external_wdt {
+		/* ADM6318 */
+		compatible = "linux,wdt-gpio";
+		always-running;
+		gpios = <&gpio4 15 0>;
+		hw_algo = "toggle";
+		hw_margin_ms = <1600>;
+	};
+
+};
+
+&gpio4 {
+	external_wdt_enable {
+		gpio-hog;
+		gpios = <14 0>;
+		output-high;
+		line-name = "external_wdt_enable";
+	};
 };
 
 &enet0 {
