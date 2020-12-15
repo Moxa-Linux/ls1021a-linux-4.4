@@ -244,6 +244,8 @@
 	rtc@6f {
 		compatible = "isil,isl1208";
 		reg = <0x6f>;
+		interrupt-parent = <&gpio4>;
+		interrupts = <22 IRQ_TYPE_EDGE_FALLING>;
 	};
 
 };
