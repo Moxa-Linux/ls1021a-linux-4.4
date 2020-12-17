@@ -128,7 +128,7 @@
 		sw_ready {
 			label = "UC8540:GREEN:SWRDY";
 			gpios = <&gpio4 16 0>;
-			default-state = "on";
+			default-state = "off";
 		};
 	};
 

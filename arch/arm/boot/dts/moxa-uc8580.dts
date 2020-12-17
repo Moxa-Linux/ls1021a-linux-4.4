@@ -86,7 +86,7 @@
 		sw_ready {
 			label = "UC8580:GREEN:SWRDY";
 			gpios = <&gpio4 16 0>;
-			default-state = "on";
+			default-state = "off";
 		};
 
 		signal_led_0_0 {
@@ -179,6 +179,24 @@
 		};
 	};
 
+	external_wdt {
+		/* ADM6318 */
+		compatible = "linux,wdt-gpio";
+		always-running;
+		gpios = <&gpio4 15 0>;
+		hw_algo = "toggle";
+		hw_margin_ms = <1600>;
+	};
+
+};
+
+&gpio4 {
+	external_wdt_enable {
+		gpio-hog;
+		gpios = <14 0>;
+		output-high;
+		line-name = "external_wdt_enable";
+	};
 };
 
 &enet0 {
@@ -244,6 +262,8 @@
 	rtc@6f {
 		compatible = "isil,isl1208";
 		reg = <0x6f>;
+		interrupt-parent = <&gpio4>;
+		interrupts = <22 IRQ_TYPE_EDGE_FALLING>;
 	};
 
 };
