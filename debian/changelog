@@ -1,3 +1,16 @@
+ls102xa-linux-4.4 (4.4.201+1.1.6+deb8) jessie; urgency=medium
+
+  [Added]
+    * Set external GPIO watchdog into kernel for UC-8580. So that on UC-8580:
+      /dev/watchdog0 represents external_watchdog, use for client service
+      /dev/watchdog1 represents SoC's watchdog, use for reboot, etc...
+
+  [Fixed]
+    * Let SW_ready LED off while booting and light it up after system is ready
+    * Set RTC and its interrupt on UC-8580
+
+ -- Alif Chen <alif.chen@moxa.com>  Thu, 17 Dec 2020 18:32:40 +0800
+
 ls102xa-linux-4.4 (4.4.201+1.1.5+deb8) jessie; urgency=medium
 
   [Changed]
