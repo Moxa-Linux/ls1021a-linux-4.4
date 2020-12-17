@@ -1,0 +1,35 @@
+Intersil ISL1208, ISL1218 I2C RTC/Alarm chip
+
+ISL1208 is a trivial I2C device (it has simple device tree bindings,
+consisting of a compatible field, an address and possibly an interrupt
+line).
+
+Required properties supported by the device:
+
+ - "compatible": must be one of
+	"isil,isl1208"
+	"isil,isl1218"
+ - "reg": I2C bus address of the device
+
+Optional properties:
+
+ - "interrupt-parent", "interrupts", "interrupts-extended":
+   for passing the interrupt line of the SoC connected to #IRQ pin
+   of the RTC chip.
+
+
+Example isl1208 node without #IRQ pin connected:
+
+	isl1208: isl1208@68 {
+		compatible = "isil,isl1208";
+		reg = <0x68>;
+	};
+
+Example isl1208 node with #IRQ pin connected to SoC gpio1 pin 12:
+
+	isl1208: isl1208@68 {
+		compatible = "isil,isl1208";
+		reg = <0x68>;
+		interrupt-parent = <&gpio1>;
+		interrupts = <12 IRQ_TYPE_EDGE_FALLING>;
+	};
