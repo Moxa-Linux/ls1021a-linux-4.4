@@ -6,8 +6,8 @@ ls102xa-linux-4.4 (4.4.201+1.1.6+deb8) jessie; urgency=medium
       /dev/watchdog1 represents SoC's watchdog, use for reboot, etc...
 
   [Fixed]
-    * Let SW_ready LED off while booting and light it up after system is ready
-    * Set RTC and its interrupt on UC-8580
+    * Turn off UC-8540/UC-8580 SW_ready LED in default. It will light on after system is ready.
+    * Enable UC-8580 RTC interrupt feature.
 
  -- Alif Chen <alif.chen@moxa.com>  Thu, 17 Dec 2020 18:32:40 +0800
 
