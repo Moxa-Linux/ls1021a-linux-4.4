@@ -1,3 +1,11 @@
+ls102xa-linux-4.4 (4.4.201+1.1.7+deb8) jessie; urgency=medium
+
+  [Changed]
+    * Disable external watchdog after power off on Moxa UC-8580.
+    * Use 'gpio-wdt' driver instead of 'gpio-hog' configuration.
+
+ -- Alif Chen <alif.chen@moxa.com>  Fri, 15 Jan 2021 16:23:04 +0800
+
 ls102xa-linux-4.4 (4.4.201+1.1.6+deb8) jessie; urgency=medium
 
   [Added]
