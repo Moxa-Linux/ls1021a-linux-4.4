@@ -180,23 +180,15 @@
 	};
 
 	external_wdt {
-		/* ADM6318 */
+		/* ADM6318 + SN74LVC1G126 */
 		compatible = "linux,wdt-gpio";
 		always-running;
-		gpios = <&gpio4 15 0>;
+		gpios = <&gpio4 15 GPIO_ACTIVE_HIGH>;
 		hw_algo = "toggle";
 		hw_margin_ms = <1600>;
+		enable-gpios = <&gpio4 14 GPIO_ACTIVE_LOW>;
 	};
 
-};
-
-&gpio4 {
-	external_wdt_enable {
-		gpio-hog;
-		gpios = <14 0>;
-		output-high;
-		line-name = "external_wdt_enable";
-	};
 };
 
 &enet0 {
