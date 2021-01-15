@@ -2,6 +2,7 @@
  * Driver for watchdog device controlled through GPIO-line
  *
  * Author: 2013, Alexander Shiyan <shc_work@mail.ru>
+ *         2021, Alif Chen <Alif.Chen@moxa.com>
  *
  * This program is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -29,7 +30,9 @@ enum {
 
 struct gpio_wdt_priv {
 	int			gpio;
+	int			enable_gpio;
 	bool			active_low;
+	bool			enable_gpio_active_low;
 	bool			state;
 	bool			always_running;
 	bool			armed;
@@ -44,6 +47,9 @@ struct gpio_wdt_priv {
 static void gpio_wdt_disable(struct gpio_wdt_priv *priv)
 {
 	gpio_set_value_cansleep(priv->gpio, !priv->active_low);
+
+	/* Disable enable gpio */
+	gpio_set_value_cansleep(priv->enable_gpio, !priv->enable_gpio_active_low);
 
 	/* Put GPIO back to tristate */
 	if (priv->hw_algo == HW_ALGO_TOGGLE)
@@ -193,6 +199,17 @@ static int gpio_wdt_probe(struct platform_device *pdev)
 	}
 
 	ret = devm_gpio_request_one(&pdev->dev, priv->gpio, f,
+				    dev_name(&pdev->dev));
+	if (ret)
+		return ret;
+
+	priv->enable_gpio = of_get_named_gpio_flags(pdev->dev.of_node ,"enable-gpios", 0, &flags);
+	if (!gpio_is_valid(priv->enable_gpio))
+		return priv->enable_gpio;
+
+	priv->enable_gpio_active_low = flags & OF_GPIO_ACTIVE_LOW;
+	f = priv->enable_gpio_active_low ? GPIOF_OUT_INIT_HIGH : GPIOF_OUT_INIT_LOW;
+	ret = devm_gpio_request_one(&pdev->dev, priv->enable_gpio, f,
 				    dev_name(&pdev->dev));
 	if (ret)
 		return ret;
