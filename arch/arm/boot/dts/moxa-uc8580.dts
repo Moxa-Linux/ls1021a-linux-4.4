@@ -46,6 +46,7 @@
  */
 
 /dts-v1/;
+#include <dt-bindings/gpio/gpio.h>
 #include "ls1021a.dtsi"
 
 / {
