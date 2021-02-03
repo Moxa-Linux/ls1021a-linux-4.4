@@ -1,111 +1,74 @@
-# Building Moxa Linux Kernel *ls102xa-linux-4.4*
-Follow the instructions below to build the *ls102xa-linux-4.4* kernel and update your device.
+# Building Moxa Linux Kernel ls102xa-linux-4.4 project
 
-## Table Of Contents
-
-- [Building Moxa Linux Kernel *ls102xa-linux-4.4*](#building-moxa-linux-kernel-ls102xa-linux-44)
-- [Table Of Contents](#table-of-contents)
-- [Build Instructions Table](#build-instructions-table)
-- [Build Kernel Packages](#build-kernel-packages)
-    - [1. Download source](#1-download-source)
-    - [2. Check out the kernel source](#2-check-out-the-kernel-source)
-    - [3. Download dockerfile](#3-download-dockerfile)
-    - [4. Create docker container](#4-create-docker-container)
-    - [5. Build kernel packages](#5-build-kernel-packages)
-- [Update Kernel Packages](#update-kernel-packages)
-    - [1. Upload kernel packages](#1-upload-kernel-packages)
-    - [2. (Optional) Backup the original kernel](#2-optional-backup-the-original-kernel)
-    - [3. Install kernel packages](#3-install-kernel-packages)
----
+Below you will find instructions to build and install the ls102xa-linux-4.4 project.
 
 ## Build Instructions Table
 
 | Branch / Tags | Build Instructions |
 | ------------- | ------------------ |
-| UC-8410A_V3.1 <br> 4.4.201-cip39-rt26/jessie/master | Below Instructions (`Latest`) |
+| UC-8410A_V3.2 <br> 4.4.201-cip39-rt26/jessie/master | Below Instructions (`Latest`) |
 
-## Build Kernel Packages
+## Download source
 
-### 1. Download source
+To obtain the ls012xa-linux-4.4 sources you must clone them as below:
 
-Obtain *ls102xa-linux-4.4* sources:
-
-```bash
-git clone git@gitlab.syssw.moxa.com:MXcore-Kernel/ls102xa-linux-4.4.git
+```
+git clone https://github.com/Moxa-Linux/ls1021a-linux-4.4.git
 ```
 
-### 2. Check out the kernel source
+## Dependencies
 
-Go to `/your/path/to/ls102xa-linux-4.4` and check the branch. If you want to build the latest ls102xa-linux-4.4 kernel, please make sure you are in the develop branch.
+To build ls102xa-linux-4.4, we provide [moxa-dockerfiles](https://github.com/Moxa-Linux/moxa-dockerfiles) to create build environment.
 
-```bash
-# check branch
-git branch -a
-# * 4.4.112-cip18-rt11/stretch/develop
-# ...
+
+## Building
+
+### Create docker container
+
+To create a docker container execute the following commands from the directory which source in:
+
 ```
-
-If you want to build the specific version of *ls102xa-linux-4.4* kernel source code, please check out the kernel source using tag.
-
-```bash
-# show tags
-git tag
-# 4.4.201-cip39-rt26/upstream
-# UC-8410A_3.0
-# UC-8410A_3.1
-# ...
-```
-
-Check out kernel source by tag:
-```bash
-git checkout <product>_V<version>
-```
-
-### 3. Download dockerfile
-
-Moxa provides [moxa-dockerfiles](http://gitlab.syssw.moxa.com/MXcore-Tool/moxa-dockerfiles) to create build environment.
-
-### 4. Create docker container
-
-Create a docker container and execute the following commands from the directory.
-
-```bash
-sudo docker run -d -it -v ${PWD}:/workspace moxa-package-builder:1.0.0 bash
-# output <container-id>
+# sudo docker run -d -it -v ${PWD}:/workspace moxa-package-builder:1.0.0 bash
 d103e6df5f719f9430056f9c23cf4e3e518d4a4f8b5b65e55889b90c258886c6
 ```
 
-After executing commands, you will get a `<container-id>` like this `d103e6df5f719f9430056f9c23cf4e3e518d4a4f8b5b65e55889b90c258886c6`.
+After execute commands, you will get a string like `d103e6df5f719f9430056f9c23cf4e3e518d4a4f8b5b65e55889b90c258886c6` which called `<container_id>` and we will use it in next step.
 
-### 5. Build kernel packages
+### Build kernel package
 
-Execute the following commands to build kernel package.
-```bash
-# go into the docker container
-docker start -ia <container-id>
-cd /workspace/ls102xa-linux-4.4
-apt-get build-dep -aarmhf .
-dpkg-buildpackage -us -uc -b -aarmhf
+To build kernel package execute the following commands:
+
 ```
-You can find `.deb` files under `/workspace` directory after the build process completes.
+# docker start -ia <container_id>
+# cd /workspace/ls102xa-linux-4.4
+# apt-get build-dep -aarmhf .
+# dpkg-buildpackage -us -uc -b -aarmhf
+```
 
----
-## Update Kernel Packages
+Once build process complete, you can find `.deb` files under `/workspace` directory.
 
-After building the kernel packages, you can update your device.
+## Updating
+
+After build the kernel packages, now you can update your device.
+
 Below are instructions to update the kernel packages on `UC-8410A`.
 
-### 1. Upload kernel packages
-```bash
-# upload to /tmp
-scp uc8410a-kernel*.deb uc8410a-modules*.deb moxa@<ip-addresso-of-your-device>:/tmp
-```
-### 2. Install kernel packages
+### Upload the kernel packages to the device
 
-```bash
-cd /tmp
-dpkg -i *.deb
-sync
+To upload kernel package to the device execute the following commands:
+
+```
+# scp uc8410a-kernel*.deb uc8410a-modules*.deb moxa@192.168.3.127:/tmp
 ```
 
-**NOTE: Remember to reboot the device after installing the kernel package!**
+### Install the kernel packages
+
+To install kernel package to the device execute the following commands:
+
+```
+# cd /tmp
+# dpkg -i *.deb
+# sync
+```
+
+**NOTE: Remember to reboot the device after install the kernel package!**
