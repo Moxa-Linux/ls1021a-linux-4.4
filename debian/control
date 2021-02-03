@@ -35,7 +35,6 @@ Description: Kbuild infrastructure for ls102xa CIP Linux
 Package: uc8410a-kernel
 Architecture: armhf
 Depends: ${misc:Depends},
-         cryptodev-linux-4.4.0-cip-rt-moxa-ls102xa (>= 1.10+1.0.0),
          uc8410a-modules (= ${binary:Version})
 Description: ls102xa Flattened Image
  Flattened image includes Linux kernel image and device trees.
@@ -54,7 +53,6 @@ Description: ls102xa standard kernel modules
 Package: uc8540-kernel
 Architecture: armhf
 Depends: ${misc:Depends},
-         cryptodev-linux-4.4.0-cip-rt-moxa-ls102xa (>= 1.10+1.0.0),
          uc8540-modules (= ${binary:Version})
 Description: ls102xa Flattened Image
  Flattened image includes Linux kernel image and device trees.
@@ -73,7 +71,6 @@ Description: ls102xa standard kernel modules
 Package: uc8580-kernel
 Architecture: armhf
 Depends: ${misc:Depends},
-         cryptodev-linux-4.4.0-cip-rt-moxa-ls102xa (>= 1.10+1.0.0),
          uc8580-modules (= ${binary:Version})
 Description: ls102xa Flattened Image
  Flattened image includes Linux kernel image and device trees.

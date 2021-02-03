@@ -1,3 +1,10 @@
+ls102xa-linux-4.4 (4.4.201+1.1.8+deb8) jessie; urgency=medium
+
+  [Removed]
+    * Remove package dependency of cryptodev.
+
+ -- Alif Chen <alif.chen@moxa.com>  Wed, 03 Feb 2021 16:17:36 +0800
+
 ls102xa-linux-4.4 (4.4.201+1.1.7+deb8) jessie; urgency=medium
 
   [Changed]
