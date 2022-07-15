@@ -2,11 +2,12 @@
 
 Below you will find instructions to build and install the ls102xa-linux-4.4 project.
 
-## Build Instructions Table
+## Version Tags, Branch and Kernel Sourece Table
 
-| Branch / Tags | Build Instructions |
-| ------------- | ------------------ |
-| UC-8410A_V3.2 <br> 4.4.201-cip39-rt26/jessie/master | Below Instructions (`Latest`) |
+| Tags | Branch | Kernel Sourece |
+| ---- | ------ | -------------- |
+| UC-8410A_V4.1.2 | [4.4.285-cip63-rt36/stretch-ls102xa/master](https://github.com/Moxa-Linux/linux-4.4/tree/4.4.285-cip63-rt36/stretch-ls102xa/master) | [linux-4.4](https://github.com/Moxa-Linux/linux-4.4/) (`Latest`) |
+| UC-8410A_V3.2   | [4.4.201-cip39-rt26/jessie/master](https://github.com/Moxa-Linux/ls1021a-linux-4.4/tree/4.4.201-cip39-rt26/jessie/master) | [ls1021a-linux-4.4](https://github.com/Moxa-Linux/ls1021a-linux-4.4) (*This repository*) (`Outdated`) |
 
 ## Download source
 
@@ -15,6 +16,8 @@ To obtain the ls012xa-linux-4.4 sources you must clone them as below:
 ```
 git clone https://github.com/Moxa-Linux/ls1021a-linux-4.4.git
 ```
+
+> 📘 Refer to https://github.com/Moxa-Linux/linux-4.4.git for newer kernel source and building flow.
 
 ## Dependencies
 
